@@ -1,4 +1,4 @@
-# Frontend Mercado Libre Challenge
+# Frontend Mercado Libre Challenge - Backend Service
 
 ## Installation
 
