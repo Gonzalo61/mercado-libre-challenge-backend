@@ -2,62 +2,13 @@ import { Request, Response } from 'express';
 
 import type {
   DescriptionResponse,
-  Filter,
   ProductListResponse,
-  Picture,
   ProductResponse,
 } from '../models/Meli';
 import { ProductDetail, ProductList } from '../models/Products';
+import { getAuthor, getCategories, parseProduct } from '../utils/parserData';
 import clientInstance from '../utils/httpClient';
 import tryCatch from '../utils/tryCatch';
-
-const getCategories = (filters: Filter[]) => {
-  const categories = filters.find((filter) => filter.id === 'category');
-  const categoriesPath = categories?.values.map(
-    (category) => category.path_from_root
-  );
-  const categoriesName = categoriesPath?.map((path) =>
-    path.map((category) => category.name)
-  );
-  return categoriesName?.length ? categoriesName[0] : [];
-};
-
-const getPicture = (pictures: Picture[] | undefined, thumbnail: string) => {
-  if (pictures && pictures.length) return pictures[0].url;
-  return thumbnail;
-};
-
-const getAuthor = () => ({
-  name: 'Gonzalo',
-  lastname: 'Corsánigo',
-});
-
-const parsePrice = (price: number, currency: string) => ({
-  amount: Math.trunc(price),
-  currency,
-  decimals: Math.floor((price * 100) % 100),
-});
-
-const parseProduct = (product: ProductResponse) => {
-  const {
-    id,
-    title,
-    price,
-    currency_id,
-    pictures,
-    thumbnail,
-    condition,
-    shipping,
-  } = product;
-  return {
-    id,
-    title,
-    price: parsePrice(price, currency_id),
-    picture: getPicture(pictures, thumbnail),
-    condition,
-    free_shipping: shipping?.free_shipping,
-  };
-};
 
 export const getProductList = tryCatch(
   async (req: Request, res: Response<ProductList>) => {
