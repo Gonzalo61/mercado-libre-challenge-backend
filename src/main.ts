@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { Request, Response } from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
 
@@ -15,6 +15,7 @@ app.use(
     methods: ['GET'],
   })
 );
+app.get('/', (_req: Request, res: Response) => res.send('Backend is running successfully!'));
 app.use('/api', routes);
 app.use(errorMiddleware);
 
